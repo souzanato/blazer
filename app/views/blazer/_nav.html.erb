@@ -1,0 +1,41 @@
+<% if can?(:read, :blazer_check) or 
+      can?(:read, :blazer_upload) or 
+      can?(:create, :blazer_query) or 
+      can?(:create, :blazer_dashboard) or
+      can?(:create, :blazer_check) %>
+  <div class="btn-group" style="vertical-align: top; margin-right: 5px;">
+  <%= link_to I18n.t("blazer.general.home", default: "Home"), root_path, class: "btn btn-primary" %>
+
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="caret"></span>
+      <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+      <% if can?(:read, :blazer_check)  %>
+      <li><%= link_to I18n.t("blazer.general.checks", default: "Checks"), checks_path %></li>
+      <% end %>
+      
+      <% if Blazer.uploads? and can?(:read, :blazer_upload)%>
+        <li><%= link_to I18n.t("blazer.general.uploads", default: "Uploads"), uploads_path %></li>
+      <% end %>
+
+      <% if can?(:create, :blazer_query) or 
+        can?(:create, :blazer_dashboard) or
+        can?(:create, :blazer_check) %>
+        <li role="separator" class="divider"></li>
+        <% if can?(:create, :blazer_query) %>
+          <li><%= link_to I18n.t("blazer.general.new_query", default: "New Query"), new_query_path %></li>
+        <% end %>
+        
+        <% if can?(:create, :blazer_dashboard) %>
+          <li><%= link_to I18n.t("blazer.general.new_dashboard", default: "New Dashboard"), new_dashboard_path %></li>
+        <% end %> 
+
+        <% if can?(:create, :blazer_check) %>
+          <% check_params = @query ? {query_id: @query.id} : {} %>
+          <li><%= link_to I18n.t("blazer.general.new_check", default: "New Check"), new_check_path(check_params) %></li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

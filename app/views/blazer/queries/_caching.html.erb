@@ -1,0 +1,16 @@
+<% if @cached_at || @just_cached %>
+  <p class="text-muted" style="float: right;">
+    <% if @cached_at %>
+      <%= I18n.t("blazer.queries.cached_n_time_ago", time_ago: time_ago_in_words(@cached_at, include_seconds: true), default: "Cached #{ time_ago_in_words(@cached_at, include_seconds: true) } ago") %>
+    <% elsif params[:query_id] %>
+      <%= I18n.t("blazer.queries.cached_n_time_ago", default: "Cached just now") %>
+      <% if @data_source.cache_mode == "slow" %>
+        (<%= I18n.t("blazer.general.over", default: "over") %> <%= "%g" % @data_source.cache_slow_threshold %>s)
+      <% end %>
+    <% end %>
+
+    <% if @query && params[:query_id] %>
+      <%= link_to I18n.t("blazer.general.refresh", default: "Refresh"), refresh_query_path(@query, params: variable_params(@query, @var_params)), method: :post %>
+    <% end %>
+  </p>
+<% end %>
